@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import br.com.fiscal.dto.response.MensagemResponseDTO;
 import br.com.fiscal.entity.NotaFiscal;
 import br.com.fiscal.exception.NotaFiscalNotFoundException;
 import br.com.fiscal.repository.NotaFiscalRepository;
@@ -17,7 +18,7 @@ public class NotaFiscalService implements NotaFiscalServiceInterface {
 	
 	@Autowired
 	private NotaFiscalRepository repository;
-
+	
 	@Override
 	public NotaFiscal findById(Long id) {
 		return repository.findById(id).orElseThrow(() -> new NotaFiscalNotFoundException("Nota Fiscal não encontrada!!"));
@@ -27,26 +28,38 @@ public class NotaFiscalService implements NotaFiscalServiceInterface {
 		return repository.findAll();
 	} 
 	
-	public NotaFiscal insert(@RequestBody NotaFiscal notaFiscal) {
-		return repository.save(notaFiscal);
-	}
-	
-	public NotaFiscal alter(@PathVariable Long id, @RequestBody NotaFiscal update) {
-		
-		NotaFiscal notaFiscalRecuperado = findById(id);
-		update.setId( notaFiscalRecuperado.getId() );
-		
-		return repository.save(update);
-	}
-	
-	
-	public void delete(@PathVariable Long id) {
-		repository.delete( findById(id) );
-	}
-
 	@Override
 	public List<NotaFiscal> findyByEmpresaSTR(String str) {
 		return repository.findyByEmpresaSTR(str);
 	}
+	
+	
+	@Override
+	public MensagemResponseDTO insert(@RequestBody NotaFiscal notaFiscal) {
+		NotaFiscal nf = repository.save(notaFiscal);
+		return MensagemResponseDTO.builder()
+				.mensagem(String.format("Nota Fiscal de ID %s, registrado com sucesso!", nf.getId())).build();
+	}
+	
+	@Override
+	public MensagemResponseDTO alterar(@PathVariable Long id, @RequestBody NotaFiscal update) {
+		
+		NotaFiscal notaFiscalRecuperado = findById(id);
+		update.setId( notaFiscalRecuperado.getId() );
+		
+		repository.save(update);
+		return MensagemResponseDTO.builder()
+				.mensagem(String.format("Nota Fiscal de ID %s, alterado com sucesso!", update.getId())).build(); 
+	}
+	
+	
+	@Override
+	public MensagemResponseDTO remover(@PathVariable Long id) {
+		NotaFiscal nf = findById(id);
+		repository.delete( nf );
+		return MensagemResponseDTO.builder()
+				.mensagem(String.format("Nota Fiscal de ID %s, removido com sucesso!", nf.getId())).build();
+	}
+
 
 }

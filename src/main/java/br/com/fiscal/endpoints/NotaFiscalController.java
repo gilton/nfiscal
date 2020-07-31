@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.fiscal.dto.response.MensagemResponseDTO;
 import br.com.fiscal.entity.NotaFiscal;
 import br.com.fiscal.exception.NotaFiscalNotFoundException;
 import br.com.fiscal.service.impl.NotaFiscalService;
@@ -24,13 +25,13 @@ public class NotaFiscalController {
 	
 	@RequestMapping(path = "/add", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
-	public NotaFiscal insert(@RequestBody NotaFiscal NotaFiscal) {
+	public MensagemResponseDTO insert(@RequestBody NotaFiscal NotaFiscal) {
 		return service.insert(NotaFiscal);
 	}
 	
 	@RequestMapping(path = "/update/{id}", method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
-	public NotaFiscal alter(@PathVariable Long id, @RequestBody NotaFiscal update) {
+	public MensagemResponseDTO alter(@PathVariable Long id, @RequestBody NotaFiscal update) {
 		
 		NotaFiscal NotaFiscalRecuperado = findById(id);
 		update.setId( NotaFiscalRecuperado.getId() );
@@ -40,8 +41,8 @@ public class NotaFiscalController {
 	
 	@RequestMapping(path = "/delete/{id}", method = RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void delete(@PathVariable Long id) {
-		service.delete(id);
+	public MensagemResponseDTO remover(@PathVariable Long id) {
+		return service.remover(id);
 	}
 	
 	@RequestMapping(path = "/find/{id}", method = RequestMethod.GET)
@@ -50,7 +51,6 @@ public class NotaFiscalController {
 		System.out.println("id: "+id+"\n");
 		return service.findById(id);
 	}
-	
 	
 	@RequestMapping(path = "/list", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
