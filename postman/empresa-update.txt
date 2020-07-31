@@ -1,0 +1,10 @@
+
+// PUT - UPDATE EMPRESA
+// ROUTE - http://localhost:8080/api/v1/empresa/update/{id}
+{
+    "fantasia": "Artefatos Inovatex",
+    "razaoSocial": "Industria Inovatex LTDA",
+    "cnpj": "48.265.133/0001-16",
+    "valorTotal": 2154.45,
+    "tipo": "Prestador"
+}

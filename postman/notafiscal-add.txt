@@ -1,0 +1,26 @@
+
+// POST - INSERT NOTAFISCAL
+// ROUTE - http://localhost:8080/api/v1/notafiscal/add
+{ 
+    "numero": "A-113x",
+    "data": "2020-07-30 17:40",
+    "valorTotal": 1554.56,
+    "tomador":{
+        "valorTotal": 1554.56,
+        "empresa": {
+            "fantasia": "POSTO LOPES",
+            "razaoSocial": "POSTO LOPES SEL",
+            "cnpj": "70.282.646/0001-94",
+            "tipo":  "Tomador"
+        }
+    },
+    "prestador": {
+        "valorTotal": 1554.56,
+         "empresa": {
+            "fantasia": "Artefatos de  Borrachar	ia Inovatex",
+            "razaoSocial": "Industria de Artefatos de Borracha Inovatex LTDA",
+            "cnpj": "48.265.133/0001-16",	
+            "tipo":  "Prestador"
+         }
+    }
+}
