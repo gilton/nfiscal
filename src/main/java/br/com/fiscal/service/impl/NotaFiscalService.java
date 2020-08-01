@@ -36,9 +36,9 @@ public class NotaFiscalService implements NotaFiscalServiceInterface {
 	
 	@Override
 	public MensagemResponseDTO insert(@RequestBody NotaFiscal notaFiscal) {
-		NotaFiscal nf = repository.save(notaFiscal);
+		repository.save(notaFiscal);
 		return MensagemResponseDTO.builder()
-				.mensagem(String.format("Nota Fiscal de ID %s, registrado com sucesso!", nf.getId())).build();
+				.mensagem(String.format("Nota Fiscal de ID %s, adicionado com sucesso!", notaFiscal.getId())).build();
 	}
 	
 	@Override
