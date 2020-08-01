@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import br.com.fiscal.dto.response.MensagemResponseDTO;
 import br.com.fiscal.entity.Empresa;
 import br.com.fiscal.exception.EmpresaNotFoundException;
 import br.com.fiscal.repository.EmpresaRepository;
@@ -27,21 +28,32 @@ public class EmpresaService implements EmpresaServiceInterface {
 		return repository.findAll();
 	} 
 	
-	public Empresa insert(@RequestBody Empresa empresa) {
-		return repository.save(empresa);
+	@Override
+	public MensagemResponseDTO insert(@RequestBody Empresa empresa) {
+		repository.save(empresa);
+		return MensagemResponseDTO.builder()
+				.mensagem(String.format("Empresa de ID %s, adicionado com sucesso!", empresa.getId())).build();
 	}
 	
-	public Empresa alter(@PathVariable Long id, @RequestBody Empresa update) {
+	@Override
+	public MensagemResponseDTO alterar(@PathVariable Long id, @RequestBody Empresa update) {
 		
 		Empresa empresaRecuperado = findById(id);
 		update.setId( empresaRecuperado.getId() );
 		
-		return repository.save(update);
+		repository.save(update);
+		return MensagemResponseDTO.builder()
+				.mensagem(String.format("Empresa de ID %s, alterado com sucesso!", update.getId())).build(); 
 	}
 	
 	
-	public void delete(@PathVariable Long id) {
-		repository.delete( findById(id) );
+	@Override
+	public MensagemResponseDTO remover(@PathVariable Long id) {
+		Empresa empresa = findById(id); 
+		repository.delete( empresa );
+		return MensagemResponseDTO.builder()
+				.mensagem(String.format("Empresa de ID %s, removido com sucesso!", empresa.getId())).build();
+	
 	}
 
 }

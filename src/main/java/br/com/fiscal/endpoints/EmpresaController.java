@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.fiscal.dto.response.MensagemResponseDTO;
 import br.com.fiscal.entity.Empresa;
 import br.com.fiscal.exception.EmpresaNotFoundException;
 import br.com.fiscal.service.impl.EmpresaService;
@@ -24,13 +25,13 @@ public class EmpresaController {
 	
 	@RequestMapping(path = "/add", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
-	public Empresa insert(@RequestBody Empresa empresa) {
+	public MensagemResponseDTO insert(@RequestBody Empresa empresa) {
 		return service.insert(empresa);
 	}
 	
 	@RequestMapping(path = "/update/{id}", method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
-	public Empresa alter(@PathVariable Long id, @RequestBody Empresa update) {
+	public MensagemResponseDTO alterar(@PathVariable Long id, @RequestBody Empresa update) {
 		
 		Empresa empresaRecuperado = findyById(id);
 		update.setId( empresaRecuperado.getId() );
@@ -40,9 +41,8 @@ public class EmpresaController {
 	
 	@RequestMapping(path = "/delete/{id}", method = RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void delete(@PathVariable Long id) {
-		
-		service.delete(id);
+	public MensagemResponseDTO remover(@PathVariable Long id) {
+		return service.remover(id);
 	}
 	
 	@RequestMapping(path = "/find/{id}", method = RequestMethod.GET)
