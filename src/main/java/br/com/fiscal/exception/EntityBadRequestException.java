@@ -4,9 +4,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.BAD_REQUEST)
-public class EmpresaBadRequestException extends RuntimeException {
+public class EntityBadRequestException extends RuntimeException {
 	
-	public EmpresaBadRequestException() {
+	public EntityBadRequestException() {
 		super("Argumento de buscar inválido!");
 	}
 	
