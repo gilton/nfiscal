@@ -1,6 +1,9 @@
 package br.com.fiscal.service.impl;
 
 import java.util.List;
+import java.util.Optional;
+
+import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import br.com.fiscal.dto.response.MensagemResponseDTO;
 import br.com.fiscal.entity.Empresa;
+import br.com.fiscal.exception.EmpresaBadRequestException;
 import br.com.fiscal.exception.EmpresaNotFoundException;
 import br.com.fiscal.repository.EmpresaRepository;
 import br.com.fiscal.service.interfaces.EmpresaServiceInterface;
@@ -20,8 +24,11 @@ public class EmpresaService implements EmpresaServiceInterface {
 	private EmpresaRepository repository;
 
 	@Override
-	public Empresa findById(Long id) {
-		return repository.findById(id).orElseThrow(() -> new EmpresaNotFoundException("Empresa não encontrada!!"));
+	public Optional<Empresa> findById(Long id) {
+		
+		if( id < 0 ) throw new EmpresaBadRequestException();
+		
+		return repository.findById(id);
 	}
 	
 	public List<Empresa> findAll() {
@@ -38,7 +45,7 @@ public class EmpresaService implements EmpresaServiceInterface {
 	@Override
 	public MensagemResponseDTO alterar(@PathVariable Long id, @RequestBody Empresa update) {
 		
-		Empresa empresaRecuperado = findById(id);
+		Empresa empresaRecuperado = findById(id).orElseThrow(() -> new EmpresaNotFoundException(id));
 		update.setId( empresaRecuperado.getId() );
 		
 		repository.save(update);
@@ -49,11 +56,13 @@ public class EmpresaService implements EmpresaServiceInterface {
 	
 	@Override
 	public MensagemResponseDTO remover(@PathVariable Long id) {
-		Empresa empresa = findById(id); 
+		Empresa empresa;
+		empresa = findById(id).orElseThrow(() -> new EmpresaNotFoundException(id));
 		repository.delete( empresa );
+		
 		return MensagemResponseDTO.builder()
 				.mensagem(String.format("Empresa de ID %s, removido com sucesso!", empresa.getId())).build();
-	
+		
 	}
 
 }

@@ -2,8 +2,11 @@ package br.com.fiscal.endpoints;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,30 +28,32 @@ public class EmpresaController {
 	
 	@RequestMapping(path = "/add", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
-	public MensagemResponseDTO insert(@RequestBody Empresa empresa) {
+	public MensagemResponseDTO insert(@Valid @RequestBody Empresa empresa) {
 		return service.insert(empresa);
 	}
 	
 	@RequestMapping(path = "/update/{id}", method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
-	public MensagemResponseDTO alterar(@PathVariable Long id, @RequestBody Empresa update) {
+	public MensagemResponseDTO alterar(@PathVariable Long id, @Valid @RequestBody Empresa update) throws EmpresaNotFoundException {
 		
-		Empresa empresaRecuperado = findyById(id);
+		Empresa empresaRecuperado = service.findById(id).orElseThrow(() -> new EmpresaNotFoundException(id));
 		update.setId( empresaRecuperado.getId() );
 		
 		return service.insert(update);
 	}
 	
 	@RequestMapping(path = "/delete/{id}", method = RequestMethod.DELETE)
-	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public MensagemResponseDTO remover(@PathVariable Long id) {
+	@ResponseStatus(HttpStatus.GONE)
+	public MensagemResponseDTO remover(@PathVariable Long id) throws EmpresaNotFoundException {
 		return service.remover(id);
 	}
 	
 	@RequestMapping(path = "/find/{id}", method = RequestMethod.GET)
-	@ResponseStatus(HttpStatus.OK)
-	public Empresa findyById(@PathVariable Long id) throws EmpresaNotFoundException {
-		return service.findById(id);
+	public ResponseEntity<Empresa> findById(@PathVariable Long id) throws EmpresaNotFoundException {
+		return 
+				new ResponseEntity<Empresa>(service.findById(id)
+						.orElseThrow(() -> new EmpresaNotFoundException(id)),
+						HttpStatus.OK);
 	}
 	
 	
