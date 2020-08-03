@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import br.com.fiscal.dto.response.MensagemResponseDTO;
 import br.com.fiscal.entity.Empresa;
-import br.com.fiscal.exception.EmpresaBadRequestException;
+import br.com.fiscal.exception.EntityBadRequestException;
 import br.com.fiscal.exception.EmpresaNotFoundException;
 import br.com.fiscal.repository.EmpresaRepository;
 import br.com.fiscal.service.interfaces.EmpresaServiceInterface;
@@ -26,7 +26,7 @@ public class EmpresaService implements EmpresaServiceInterface {
 	@Override
 	public Optional<Empresa> findById(Long id) {
 		
-		if( id < 0 ) throw new EmpresaBadRequestException();
+		if( id < 0 ) throw new EntityBadRequestException();
 		
 		return repository.findById(id);
 	}

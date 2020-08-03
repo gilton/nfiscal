@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,9 +32,11 @@ public class NotaFiscalController {
 	
 	@RequestMapping(path = "/update/{id}", method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
-	public MensagemResponseDTO alter(@PathVariable Long id, @RequestBody NotaFiscal update) {
+	public MensagemResponseDTO alterar(@PathVariable Long id, @RequestBody NotaFiscal update) {
 		
-		NotaFiscal NotaFiscalRecuperado = findById(id);
+		NotaFiscal NotaFiscalRecuperado = service
+												.findById(id)
+												.orElseThrow(() -> new NotaFiscalNotFoundException(id));
 		update.setId( NotaFiscalRecuperado.getId() );
 		
 		return service.insert(update);
@@ -47,9 +50,10 @@ public class NotaFiscalController {
 	
 	@RequestMapping(path = "/find/{id}", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
-	public NotaFiscal findById(@PathVariable Long id) {
-		System.out.println("id: "+id+"\n");
-		return service.findById(id);
+	public ResponseEntity <NotaFiscal> findById(@PathVariable Long id) {
+		return new ResponseEntity<NotaFiscal>(service.findById(id)
+				.orElseThrow(() -> new NotaFiscalNotFoundException(id)),
+				HttpStatus.OK);
 	}
 	
 	@RequestMapping(path = "/list", method = RequestMethod.GET)
@@ -63,6 +67,5 @@ public class NotaFiscalController {
 	public List<NotaFiscal> findyByEmpresa(@PathVariable String pesquisa) throws NotaFiscalNotFoundException {
 		return service.findyByEmpresaSTR(pesquisa);
 	}
-	
 	
 }
