@@ -1,6 +1,7 @@
 package br.com.fiscal.service.impl;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,7 +27,14 @@ public class EmpresaService implements EmpresaServiceInterface {
 	
 	
 //	CRUD METHODS
-	public List<Empresa> findAll() { return repository.findAll(); }
+	public List<EmpresaDTO> findAll() { 
+		List<Empresa> empresas = repository.findAll(); 
+		return empresas
+				.stream()
+				.map(empresaMapper::toDTO)
+				.collect(Collectors.toList());
+				
+	}
 
 	@Override
 	public EmpresaDTO findById(Long id) {

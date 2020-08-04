@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.fiscal.dto.request.EmpresaDTO;
 import br.com.fiscal.dto.response.MensagemResponseDTO;
-import br.com.fiscal.entity.Empresa;
 import br.com.fiscal.exception.EmpresaNotFoundException;
 import br.com.fiscal.service.impl.EmpresaService;
 
@@ -52,7 +51,7 @@ public class EmpresaController {
 	
 	@RequestMapping(path = "/list", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
-	public List<Empresa> findAll() {
+	public List<EmpresaDTO> findAll() {
 		return service.findAll();
 	}
 }
