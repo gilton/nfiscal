@@ -2,6 +2,8 @@ package br.com.fiscal.endpoints;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,13 +28,13 @@ public class NotaFiscalController {
 	
 	@RequestMapping(path = "/add", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
-	public MensagemResponseDTO insert(@RequestBody NotaFiscal NotaFiscal) {
+	public MensagemResponseDTO insert(@Valid @RequestBody NotaFiscal NotaFiscal) {
 		return service.insert(NotaFiscal);
 	}
 	
 	@RequestMapping(path = "/update/{id}", method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
-	public MensagemResponseDTO alterar(@PathVariable Long id, @RequestBody NotaFiscal update) {
+	public MensagemResponseDTO alterar(@PathVariable Long id, @Valid @RequestBody NotaFiscal update) {
 		
 		NotaFiscal NotaFiscalRecuperado = service
 												.findById(id)
