@@ -30,11 +30,17 @@ public class Empresa {
 	@Column(name = "razao_social", nullable = false)
 	private String razaoSocial;
 	
-	@Column(nullable = false)
+	@Column(nullable = false, unique = true)
 	private String cnpj;
 	
 	@Column
 	private String tipo;
 	
-	
+	//Construtor criado para o test Rest API método deveRetornarSucesso_QuandoInserirEmpresa
+	public Empresa(String fantasia, String razaoSocial, String cnpj, String tipo) {
+		this.fantasia = fantasia;
+		this.razaoSocial = razaoSocial;
+		this.cnpj = cnpj;
+		this.tipo = tipo;
+	}
 }

@@ -7,8 +7,6 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.Optional;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +14,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 
+import br.com.fiscal.dto.mapper.EmpresaMapper;
+import br.com.fiscal.dto.request.EmpresaDTO;
 import br.com.fiscal.dto.response.MensagemResponseDTO;
 import br.com.fiscal.endpoints.EmpresaController;
 import br.com.fiscal.entity.Empresa;
@@ -37,6 +37,11 @@ public class EmpresaRestTest {
 	@MockBean
 	private NotaFiscalService notaFiscalService;
 	
+	@MockBean
+	private EmpresaMapper empresaMapper;
+
+	
+	
 	@BeforeEach
 	public void setup() {
 		standaloneSetup(this.empresaController);
@@ -45,13 +50,14 @@ public class EmpresaRestTest {
 	
 	@Test
 	public void deveRetornarSucesso_QuandoInserirEmpresa() {
-		String body= "{\"fantasia\": \"Murai\", \"razaoSocial\": \"Autobrand Comercio de Veiculos LTDA\", \"cnpj\": \"92.217.304/0001-23\", \"tipo\": \"Prestador\"}";
+		String body= "{\"fantasia\": \"Potencial Pecas e Servicos\", \"razaoSocial\": \"Potencial Pecas e Servicos Automobilisticos LTDA\", \"cnpj\": \"28.424.882/0001-31\", \"tipo\": \"Prestador\"}";
 		
-		Empresa empresaCriada = new Empresa(6L, "92.217.304/0001-23","Murai","Autobrand Comercio de Veiculos LTDA", "Prestador");
+		Empresa empresaCriada = new Empresa("28.424.882/0001-31","Potencial Pecas e Servicos","Potencial Pecas e Servicos Automobilisticos LTDA", "Prestador");
+		EmpresaDTO empresaDto = empresaMapper.toDTO(empresaCriada);
 		
-		when(this.empresaService.insert(empresaCriada))
+		when(this.empresaService.insert(empresaDto))
 		.thenReturn( MensagemResponseDTO.builder()
-				.mensagem("Empresa de ID "+6L+", adicionado com sucesso!")
+				.mensagem("Empresa de ID "+empresaCriada.getId()+", adicionado com sucesso!")
 				.build() );
 		
 		given().body(body).contentType("application/json")
@@ -70,9 +76,12 @@ public class EmpresaRestTest {
 												"92.217.304/0001-23",
 												"Murai Thai",
 												"Comercio de Veiculos LTDA", "Tomador");
-		this.empresaService.alterar(id, empresaAlterada);
 		
-		when(this.empresaService.alterar(id, empresaAlterada))
+		EmpresaDTO empresaDto = empresaMapper.toDTO(empresaAlterada);
+		
+		this.empresaService.alterar(id, empresaDto);
+		
+		when(this.empresaService.alterar(id, empresaDto))
 		.thenReturn( MensagemResponseDTO.builder()
 				.mensagem("Empresa de ID "+id+", alterado com sucesso!")
 				.build() );
@@ -86,10 +95,12 @@ public class EmpresaRestTest {
 	@Test
 	public void deveRetornarSucesso_QuandoBuscarEmpresa() throws EmpresaNotFoundException {
 		Empresa empresaCriada = new Empresa(1L, "70.282.646/0001-94","POSTO LOPES","POSTO LOPES SEL", "Tomador");
-		Optional<Empresa> empresaEncontrada = this.empresaService.findById(1L);
+		EmpresaDTO empresaDto = this.empresaService.findById(1L);
+		EmpresaDTO empresaCriadaDto = empresaMapper.toDTO(empresaCriada);
 		
-		when(empresaEncontrada)
-		.thenReturn(Optional.of(empresaCriada));
+		
+		when(empresaDto)
+		.thenReturn( empresaCriadaDto );
 	
 		given()
 			.accept(ContentType.JSON)
@@ -103,7 +114,9 @@ public class EmpresaRestTest {
 	public void deveRetornarNaoEncontrado_QuandoBuscarEmpresaPorIdInexistente() {
 		final long id = 100L;
 	
-		when(this.empresaService.findById(id).orElse(null))
+		EmpresaDTO empresaDto = this.empresaService.findById(id);
+		
+		when(empresaDto)
 		.thenReturn(null);
 		
 		given()
