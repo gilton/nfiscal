@@ -36,9 +36,4 @@ public class NotaFiscalDTO {
 	
 	private List<Servico> servicos;
 	
-	public NotaFiscalDTO( TomadorDTO tomadorDto, PrestadorDTO prestadorDto ) {
-		this.tomador = tomadorDto;
-		this.prestador = prestadorDto;
-	}
-	
 }

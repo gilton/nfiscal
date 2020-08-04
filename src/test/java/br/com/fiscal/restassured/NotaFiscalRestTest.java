@@ -18,8 +18,6 @@ import org.springframework.http.HttpStatus;
 
 import br.com.fiscal.dto.mapper.NotaFiscalMapper;
 import br.com.fiscal.dto.request.NotaFiscalDTO;
-import br.com.fiscal.dto.request.PrestadorDTO;
-import br.com.fiscal.dto.request.TomadorDTO;
 import br.com.fiscal.dto.response.MensagemResponseDTO;
 import br.com.fiscal.endpoints.NotaFiscalController;
 import br.com.fiscal.entity.Empresa;
@@ -55,7 +53,7 @@ public class NotaFiscalRestTest {
 	
 	@Test
 	public void deveRetornarSucesso_QuandoInserirNotaFiscal() {
-		String body= "{\"numero\": \"A-113x\",\"data\": \"2020-07-30 17:40\",\"valorTotal\": 1554.56,\n" + 
+		String body= "{\"numero\": \"A-113x\",\"data\": \"2018-07-30T18:20:00\",\"valorTotal\": 1554.56,\n" + 
 				"\"tomador\":{\"valorTotal\": 1554.56,"
 					+ "\"empresa\": {\"fantasia\": \"POSTO LOPES\",\"razaoSocial\": \"POSTO LOPES SEL\",\"cnpj\": \"70.282.646/0001-94\",\"tipo\":  \"Tomador\"}},\n" + 
 				"\"prestador\": {\"valorTotal\": 1554.56,"
@@ -65,19 +63,13 @@ public class NotaFiscalRestTest {
 		Tomador tomador = new Tomador(1L, valorTotal1, LocalDateTime.now(), LocalDateTime.now(),
 				new Empresa(2L, "POSTO LOPES","POSTO LOPES SEL","70.282.646/0001-94", "Tomador"),null);
 		
-		TomadorDTO tomadorDTO = notafiscalMapper.toDTO(tomador);
-		
 		Prestador prestador = new Prestador(1L, valorTotal1, LocalDateTime.now(), LocalDateTime.now(),
 				new Empresa(1L,"Artefatos de Borracha Inovatex",
 						" Industria de Artefatos de Borracha Inovatex LTDA",
 						"48.265.133/0001-16", "Prestador"), null);
 		
-		PrestadorDTO prestadorDTO = notafiscalMapper.toDTO(prestador);
-		
-		
 		NotaFiscal nfCriada = new NotaFiscal("2133-9AFE12",LocalDateTime.now(),1455.56, tomador, prestador, null);
-		NotaFiscalDTO nfiscalDto = new NotaFiscalDTO(tomadorDTO, prestadorDTO);
-		nfiscalDto = notafiscalMapper.toDTO(nfCriada);
+		NotaFiscalDTO nfiscalDto = notafiscalMapper.toDTO(nfCriada);
 		
 		
 		when(this.nfService.insert(nfiscalDto))
