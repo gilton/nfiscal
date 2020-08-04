@@ -8,7 +8,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,13 +16,17 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 
+import br.com.fiscal.dto.mapper.NotaFiscalMapper;
+import br.com.fiscal.dto.request.NotaFiscalDTO;
+import br.com.fiscal.dto.request.PrestadorDTO;
+import br.com.fiscal.dto.request.TomadorDTO;
 import br.com.fiscal.dto.response.MensagemResponseDTO;
 import br.com.fiscal.endpoints.NotaFiscalController;
 import br.com.fiscal.entity.Empresa;
 import br.com.fiscal.entity.NotaFiscal;
 import br.com.fiscal.entity.Prestador;
 import br.com.fiscal.entity.Tomador;
-import br.com.fiscal.exception.EmpresaNotFoundException;
+import br.com.fiscal.exception.NotaFiscalNotFoundException;
 import br.com.fiscal.service.impl.EmpresaService;
 import br.com.fiscal.service.impl.NotaFiscalService;
 import io.restassured.http.ContentType;
@@ -41,6 +44,9 @@ public class NotaFiscalRestTest {
 	@MockBean
 	private NotaFiscalService nfService;
 	
+	@MockBean
+	private NotaFiscalMapper notafiscalMapper;
+	
 	@BeforeEach
 	public void setup() {
 		standaloneSetup(this.nfController);
@@ -55,21 +61,28 @@ public class NotaFiscalRestTest {
 				"\"prestador\": {\"valorTotal\": 1554.56,"
 					+ "\"empresa\": {\"fantasia\": \"Artefatos de  Borracharia Inovatex\",\"razaoSocial\": \"Industria de Artefatos de Borracha Inovatex LTDA\",\"cnpj\": \"48.265.133/0001-16\",\"tipo\":  \"Prestador\"}}}";
 		
-		NotaFiscal nf;
 		Double valorTotal1 = 1455.56;
 		Tomador tomador = new Tomador(1L, valorTotal1, LocalDateTime.now(), LocalDateTime.now(),
 				new Empresa(2L, "POSTO LOPES","POSTO LOPES SEL","70.282.646/0001-94", "Tomador"),null);
+		
+		TomadorDTO tomadorDTO = notafiscalMapper.toDTO(tomador);
 		
 		Prestador prestador = new Prestador(1L, valorTotal1, LocalDateTime.now(), LocalDateTime.now(),
 				new Empresa(1L,"Artefatos de Borracha Inovatex",
 						" Industria de Artefatos de Borracha Inovatex LTDA",
 						"48.265.133/0001-16", "Prestador"), null);
 		
-		nf = new NotaFiscal(11L,"numero cod",LocalDateTime.now(),1455.56, tomador, prestador, null);
+		PrestadorDTO prestadorDTO = notafiscalMapper.toDTO(prestador);
 		
-		when(this.nfService.insert(nf))
+		
+		NotaFiscal nfCriada = new NotaFiscal("2133-9AFE12",LocalDateTime.now(),1455.56, tomador, prestador, null);
+		NotaFiscalDTO nfiscalDto = new NotaFiscalDTO(tomadorDTO, prestadorDTO);
+		nfiscalDto = notafiscalMapper.toDTO(nfCriada);
+		
+		
+		when(this.nfService.insert(nfiscalDto))
 		.thenReturn( MensagemResponseDTO.builder()
-				.mensagem("Empresa de ID "+11L+", adicionado com sucesso!")
+				.mensagem("Empresa de ID "+nfCriada.getId()+", adicionado com sucesso!")
 				.build() );
 		
 		given().body(body).contentType("application/json")
@@ -79,7 +92,7 @@ public class NotaFiscalRestTest {
 	}
 	
 	@Test
-	public void deveRetornarSucesso_QuandoBuscarNotaFiscal() throws EmpresaNotFoundException {
+	public void deveRetornarSucesso_QuandoBuscarNotaFiscal() throws NotaFiscalNotFoundException {
 		
 		Double valorTotal1 = 1455.56;
 		Tomador tomador = new Tomador(1L, valorTotal1, LocalDateTime.now(), LocalDateTime.now(),
@@ -90,11 +103,13 @@ public class NotaFiscalRestTest {
 						" Industria de Artefatos de Borracha Inovatex LTDA",
 						"48.265.133/0001-16", "Prestador"), null);
 		
-		NotaFiscal nf = new NotaFiscal(11L,"numero cod",LocalDateTime.now(),1455.56, tomador, prestador, null);
-		Optional<NotaFiscal> nfEncontrado = this.nfService.findById(1L);
+		NotaFiscal nfCriada = new NotaFiscal(11L,"numero cod",LocalDateTime.now(),1455.56, tomador, prestador, null);
 		
-		when(nfEncontrado)
-		.thenReturn(Optional.of(nf));
+		NotaFiscalDTO nfEncontradoDTO = this.nfService.findById(1L);
+		NotaFiscalDTO nfCriadaDTO = notafiscalMapper.toDTO(nfCriada);
+		
+		when( nfEncontradoDTO )
+		.thenReturn( nfCriadaDTO );
 	
 		given()
 			.accept(ContentType.JSON)
@@ -107,8 +122,10 @@ public class NotaFiscalRestTest {
 	@Test
 	public void deveRetornarNaoEncontrado_QuandoBuscarNotaFiscalPorIdInexistente() {
 		final long id = 100L;
-	
-		when(this.nfService.findById(id).orElse(null))
+		
+		NotaFiscalDTO dto = nfService.findById(id);
+		
+		when(dto)
 		.thenReturn(null);
 		
 		given()

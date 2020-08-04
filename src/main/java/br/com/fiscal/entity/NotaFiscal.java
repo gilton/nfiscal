@@ -57,4 +57,14 @@ public class NotaFiscal {
 	@ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE}, targetEntity = Servico.class)
 	private List<Servico> servicos;
 	
+	//Construtor criado para o test Rest API método deveRetornarSucesso_QuandoInserirEmpresa
+	public NotaFiscal (String numero, LocalDateTime data, Double valorTotal, Tomador tomador, Prestador prestador, List<Servico> servicos) {
+		this.numero = numero;
+		this.data = data;
+		this.valorTotal = valorTotal;
+		this.tomador = tomador;
+		this.prestador = prestador;
+		this.servicos = servicos;
+	}
+	
 }
