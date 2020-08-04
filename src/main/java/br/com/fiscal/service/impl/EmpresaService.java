@@ -33,7 +33,6 @@ public class EmpresaService implements EmpresaServiceInterface {
 				.stream()
 				.map(empresaMapper::toDTO)
 				.collect(Collectors.toList());
-				
 	}
 
 	@Override
