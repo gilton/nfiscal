@@ -22,8 +22,10 @@ implementar uma API simples de gerenciamento de notas fiscais.
 
 ## Abordagens Tomadas
 
-- [x] REST API (CRUD)
+- [x] REST API 
 - [x] JUnit (Test)
+- [x] Mockito 
+- [x] REST ASSURED
 - [x] UML
 
 
