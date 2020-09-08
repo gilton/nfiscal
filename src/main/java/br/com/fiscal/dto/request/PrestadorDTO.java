@@ -20,7 +20,7 @@ public class PrestadorDTO {
 	private String dataFim;
 	
 	@NotNull
-	private EmpresaDTO empresaDto;
+	private Long empresaId;
 	
 	private List<Servico> servicos;
 	

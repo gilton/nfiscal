@@ -19,7 +19,7 @@ import br.com.fiscal.exception.NotaFiscalNotFoundException;
 import br.com.fiscal.service.impl.NotaFiscalService;
 
 @RestController
-@RequestMapping("/api/v1/notafiscal")
+@RequestMapping("/api/v1/notafiscais")
 public class NotaFiscalController {
 
 	@Autowired

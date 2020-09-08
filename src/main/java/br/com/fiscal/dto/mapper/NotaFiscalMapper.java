@@ -1,6 +1,8 @@
 package br.com.fiscal.dto.mapper;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
 import org.mapstruct.factory.Mappers;
 
 import br.com.fiscal.dto.request.NotaFiscalDTO;
@@ -15,16 +17,17 @@ public interface NotaFiscalMapper {
 	
 	NotaFiscalMapper INSTANCE = Mappers.getMapper(NotaFiscalMapper.class);
 	
+	@Mappings({
+		 @Mapping(source = "tomador.id", target = "tomador.id"),
+		 @Mapping(source = "prestador.id", target = "prestador.id")
+	 })
+	NotaFiscalDTO toDTO(NotaFiscal entity);
 	NotaFiscal toModel(NotaFiscalDTO dto);
 	
-	NotaFiscalDTO toDTO(NotaFiscal entity);
-	
+	TomadorDTO toDTO(Tomador entity);
 	Tomador toModel(TomadorDTO dto);
 	
-	TomadorDTO toDTO(Tomador entity);
-	
-	Prestador toModel(PrestadorDTO dto);
-	
 	PrestadorDTO toDTO(Prestador entity);
+	Prestador toModel(PrestadorDTO dto);
 	
 }

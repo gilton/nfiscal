@@ -19,7 +19,7 @@ import br.com.fiscal.exception.EmpresaNotFoundException;
 import br.com.fiscal.service.impl.EmpresaService;
 
 @RestController
-@RequestMapping("/api/v1/empresa")
+@RequestMapping("/api/v1/empresas")
 public class EmpresaController {
 
 	@Autowired

@@ -45,7 +45,7 @@ public class EmpresaRestTest {
 	@BeforeEach
 	public void setup() {
 		standaloneSetup(this.empresaController);
-		baseURI = "http://localhost:8080/api/v1/empresa/";
+		baseURI = "http://localhost:8080/api/v1/empresas/";
 	}
 	
 	@Test

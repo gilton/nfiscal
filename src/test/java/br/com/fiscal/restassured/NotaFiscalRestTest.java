@@ -45,10 +45,11 @@ public class NotaFiscalRestTest {
 	@MockBean
 	private NotaFiscalMapper notafiscalMapper;
 	
+	
 	@BeforeEach
 	public void setup() {
 		standaloneSetup(this.nfController);
-		baseURI = "http://localhost:8080/api/v1/notafiscal/";
+		baseURI = "http://localhost:8080/api/v1/notafiscais/";
 	}
 	
 	@Test
@@ -60,8 +61,17 @@ public class NotaFiscalRestTest {
 					+ "\"empresa\": {\"fantasia\": \"Artefatos de  Borracharia Inovatex\",\"razaoSocial\": \"Industria de Artefatos de Borracha Inovatex LTDA\",\"cnpj\": \"48.265.133/0001-16\",\"tipo\":  \"Prestador\"}}}";
 		
 		Double valorTotal1 = 1455.56;
+		
+		final long empresaId = 2L;
+		Empresa empresaTomadora = new Empresa(empresaId, "POSTO LOPES","POSTO LOPES SEL","70.282.646/0001-94", "Tomador");
+		
+//		EmpresaDTO empresaDto = empresaService.findById(empresaId);
+		
+		
+		
 		Tomador tomador = new Tomador(1L, valorTotal1, LocalDateTime.now(), LocalDateTime.now(),
-				new Empresa(2L, "POSTO LOPES","POSTO LOPES SEL","70.282.646/0001-94", "Tomador"),null);
+				empresaTomadora, null);
+		
 		
 		Prestador prestador = new Prestador(1L, valorTotal1, LocalDateTime.now(), LocalDateTime.now(),
 				new Empresa(1L,"Artefatos de Borracha Inovatex",

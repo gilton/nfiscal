@@ -5,7 +5,9 @@ import java.util.List;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import br.com.fiscal.entity.Prestador;
 import br.com.fiscal.entity.Servico;
+import br.com.fiscal.entity.Tomador;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -29,10 +31,10 @@ public class NotaFiscalDTO {
 	private Double valorTotal;
 	
 	@NotNull
-	private TomadorDTO tomador;
+	private Tomador tomador;
 	
 	@NotNull
-	private PrestadorDTO prestador;
+	private Prestador prestador;
 	
 	private List<Servico> servicos;
 	
